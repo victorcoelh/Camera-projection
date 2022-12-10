@@ -2,9 +2,10 @@ import numpy as np
 
 from shapes.shape_creator import ShapeCreator
 from shapes.shape_transformer import ShapeTransformer
-from graphs.matplotlib_graph import ObjectGrapher
+from graphs.matplotlib_graph import ObjectGrapher, Graph2D
 from camera.camera_base import CameraBase, ConvertBase
 from camera.project import Projection2d
+from camera.vision_volume import VolumeFilter
 
 
 def create_and_position_cube():
@@ -61,10 +62,11 @@ def main():
     graph.plot_objects(objects)
 
     # Convert to camera coordinates and plot 3d view again
-    eye = np.array([-5, -5, -5])
+    eye = np.array([-10, -5, -1])
     at = np.array([5, -5, -5])
+    solids, faces = VolumeFilter(solids, faces).filter_solids()
     camera_base = CameraBase(eye, at).get_camera_base()
-    solids = ConvertBase.convert_objects(solids, camera_base)
+    solids = ConvertBase.convert_objects(solids, camera_base, eye)
     objects = zip(solids, faces)
 
     graph = ObjectGrapher()
@@ -74,7 +76,13 @@ def main():
     graph.render_plot()
 
     # Project to 2d view
-    projection = Projection2d(solids).project_solids(4/3, 2)
+    projection = Projection2d(solids).project_solids(4/3, 5)
+    print(projection)
+    objects = zip(projection, faces)
+
+    graph2d = Graph2D()
+    graph2d.plot_objects(objects)
+    graph.render_plot()
 
 
 if __name__ == '__main__':

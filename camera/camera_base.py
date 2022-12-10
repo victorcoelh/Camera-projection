@@ -1,5 +1,6 @@
 import numpy as np
 from typing import List
+from shapes.shape_transformer import ShapeTransformer
 
 
 class CameraBase:
@@ -12,29 +13,35 @@ class CameraBase:
         self.__get_i()
         self.__get_k()
         self.__get_j()
+        print(self.base)
         return self.base
 
     def __get_i(self):
-        n = self.eye - self.at
+        n = self.at - self.eye
         n = normalize(n)
         self.base[0] = n
 
     def __get_j(self):
         j = np.cross(self.base[0], self.base[2])
+        j = normalize(j)
         self.base[1] = j
 
     def __get_k(self):
-        aux = np.array([0, 0, 2])
+        aux = np.array([0, 0, 1])
         projection = project_a_on_b(aux, self.base[0])
         k = aux - projection
+        k = normalize(k)
         self.base[2] = k
 
 
 class ConvertBase:
     @staticmethod
-    def convert_objects(objects: List[np.ndarray], new_base: np.ndarray) -> List[np.ndarray]:
+    def convert_objects(objects: List[np.ndarray], new_base: np.ndarray, eye: np.ndarray) -> List[np.ndarray]:
         for i in range(len(objects)):
-            objects[i] = ConvertBase.convert_base(objects[i], new_base)
+            converted = ConvertBase.convert_base(objects[i], new_base)
+            transformer = ShapeTransformer(converted)
+            transformer.translate(-eye[0], -eye[1], -eye[2])
+            objects[i] = transformer.apply_transformations()
         return objects
 
     @staticmethod

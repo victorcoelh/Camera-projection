@@ -1,4 +1,6 @@
 from typing import Tuple, List
+
+import numpy as np
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
@@ -48,4 +50,24 @@ class ObjectGrapher:
 
 class Graph2D:
     def __init__(self):
-        pass
+        fig = plt.figure()
+        self.ax = fig.add_subplot()
+        self.colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+
+    def render_plot(self):
+        plt.show()
+
+    def save_fig(self, file_name: str):
+        plt.savefig(file_name)
+
+    def plot_objects(self, objects: List[Tuple]):
+        for vertices, faces in objects:
+            polygon_lines = ValueReader(vertices, faces).get_values2d()
+            color = self.decide_color()
+            for line in polygon_lines:
+                x = [line[0][1], line[1][1]]
+                y = [line[0][2], line[1][2]]
+                plt.plot(x, y, color)
+
+    def decide_color(self):
+        return self.colors.pop(0)
