@@ -23,7 +23,7 @@ class CameraBase:
 
     def __get_j(self):
         j = np.cross(self.base[0], self.base[2])
-        j = normalize(j)
+        j = normalize(-j)
         self.base[1] = j
 
     def __get_k(self):

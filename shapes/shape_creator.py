@@ -90,8 +90,8 @@ class ShapeCreator:
         return stub, faces
 
     @classmethod
-    def cylinder(cls, height, radius, slices):
-        cylinder = ShapeCreator.__generate_circles(height, radius, slices)
+    def cylinder(cls, height, top_radius, bottom_radius, slices):
+        cylinder = ShapeCreator.__generate_circles(height, top_radius, bottom_radius, slices)
         last_face = np.empty(slices, dtype='int64')
         last_face.fill(-1)
         last_face[0:4] = (slices-1, 0, slices, -1)
@@ -111,7 +111,7 @@ class ShapeCreator:
         return cylinder, np.array(faces)
 
     @classmethod
-    def __generate_circles(cls, height, radius, slices) -> np.ndarray:
+    def __generate_circles(cls, height, top_radius, bottom_radius, slices) -> np.ndarray:
         x = []
         y = []
         z = [height] * slices
@@ -119,12 +119,18 @@ class ShapeCreator:
         interval = np.pi*2 / slices
         for i in range(0, slices):
             a = interval * i
-            current_x = np.cos(a) * radius
-            current_y = np.sin(a) * radius
+            current_x = np.cos(a) * top_radius
+            current_y = np.sin(a) * top_radius
             x.append(current_x)
             y.append(current_y)
+
         # generating the second circle
-        x = x * 2
-        y = y * 2
+        for i in range(0, slices):
+            a = interval * i
+            current_x = np.cos(a) * bottom_radius
+            current_y = np.sin(a) * bottom_radius
+            x.append(current_x)
+            y.append(current_y)
+
         z.extend([0] * slices)
         return np.array([x, y, z])

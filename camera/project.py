@@ -26,12 +26,6 @@ class Projection2d:
                 (0, 0, d/x, 0),
                 (0, 0, 0, 1)
             ])
-            # m = np.array([
-            #     (d/(r*x), 0, 0, 0),
-            #     (0, d/x, 0, 0),
-            #     (0, 0, 0, d),
-            #     (0, 0, 0, 1)
-            # ])
             transpose[i] = m @ vector
         solid = transpose.T
         return np.delete(solid, -1, 0)

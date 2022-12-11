@@ -1,10 +1,10 @@
-import numpy as np
+import copy
 
 
 class VolumeFilter:
     def __init__(self, solids, faces):
-        self.solids = solids
-        self.faces = faces
+        self.solids = copy.deepcopy(solids)
+        self.faces = copy.deepcopy(faces)
 
     def filter_solids(self):
         offset = 0
@@ -22,7 +22,6 @@ class VolumeFilter:
         outside_y = [y for y in solid[1] if y > 0]
         outside_z = [z for z in solid[2] if z > 0]
         length = len(outside_z) + len(outside_y) + len(outside_x)
-        print(length)
 
         if length > 0:
             return False

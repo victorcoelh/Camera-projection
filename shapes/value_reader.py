@@ -20,15 +20,15 @@ class ValueReader:
         return np.array(faces)
 
     def get_values2d(self):
-        faces = np.append(self.faces, [self.faces[0]], 0)
-        points = self.faces.flatten()
-        np.append(points, points[0])
-        size = len(points) - 1
-        lines = []
-        for i in range(0, size, 2):
-            a = points[i]
-            b = points[i+1]
-            point_a = (self.shape[0][a], self.shape[1][a], self.shape[1][a])
-            point_b = (self.shape[0][b], self.shape[1][b], self.shape[2][b])
-            lines.append((point_a, point_b))
-        return lines
+        polygons = []
+        for face in self.faces:
+            polygon = []
+            for point in face:
+                x = self.shape[0][point]
+                y = self.shape[1][point]
+                z = self.shape[2][point]
+                current_point = [x, y, z]
+                polygon.append(current_point)
+            polygons.append(polygon)
+        return polygons
+
