@@ -44,6 +44,25 @@ def create_and_position_cylinder():
     return cylinder_transformer.apply_transformations(), cylinder_faces
 
 
+def test_transformations():
+    cube, cube_faces = ShapeCreator.cube(4)
+    cube_transformer = ShapeTransformer(cube)
+    cube_transformer.rotate('y', np.pi/8)
+    cube_transformer.escalate(1, 2, 1)
+    cube_transformer.translate(1, 1, 1)
+    cube = cube_transformer.apply_transformations()
+
+    solids = [cube]
+    faces = [cube_faces]
+    objects = zip(solids, faces)
+
+    graph = ObjectGrapher()
+    graph.set_axes_sizes(-10, 10)
+    graph.set_config(line_width=0.2, edge_color='black', face_color='blue', alpha=0.1)
+    graph.plot_objects(objects)
+    graph.render_plot()
+
+
 def main():
     # Create solids
     cube, cube_faces = create_and_position_cube()

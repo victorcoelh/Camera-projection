@@ -30,7 +30,31 @@ class ShapeTransformer:
         self.m = self.m @ transformation
 
     def rotate(self, axis, angle):
-        pass
+        cos = np.cos(angle)
+        sin = np.sin(angle)
+        if axis == 'x':
+            rotation = [
+                (1, 0, 0, 0),
+                (0, cos, -sin, 0),
+                (0, sin, cos, 0),
+                (0, 0, 0, 1)
+            ]
+        elif axis == 'y':
+            rotation = [
+                (cos, 0, sin, 0),
+                (0, 1, 0, 0),
+                (-sin, 0, cos, 0),
+                (0, 0, 0, 1)
+            ]
+        else:
+            rotation = [
+                (cos, -sin, 0, 0),
+                (sin, cos, 0, 0),
+                (0, 0, 1, 0),
+                (0, 0, 0, 1)
+            ]
+        transformation = np.array(rotation)
+        self.m = self.m @ transformation
 
     def __turn_vertices_homogenous(self):
         size = self.vertices.shape[1]
